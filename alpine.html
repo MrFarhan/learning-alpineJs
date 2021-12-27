@@ -10,40 +10,100 @@
       src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
     ></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/dist/output.css" rel="stylesheet" />
   </head>
   <body class="flex items-center justify-between pt-5 flex-col">
-    <h1 x-data="{ message: 'TODO APPLICATION' }" x-text="message"></h1>
-
-    <div x-data="{ inputVal: '',todos:[] }">
-      <div
-        class="
-          bg-white
-          shadow-md
-          rounded
-          px-8
-          pt-6
-          pb-8
-          mb-4
-          flex flex-col
-          items-right
-        "
-      >
+    <div
+      class="
+        bg-white
+        shadow-md
+        rounded
+        px-8
+        pt-6
+        pb-8
+        mb-4
+        flex flex-col
+        items-right
+        max-h-customMaxHeight
+        overflow-auto
+      "
+      x-data="{ inputVal: '',todos:[] }"
+    >
+      <h1 >TODO APPLICATION</h1>
+      <div class="w-full flex item-center justify-center relative">
         <input
+          class="
+            appearance-none
+            block
+            bg-gray-200
+            text-gray-700
+            border border-gray-200
+            rounded
+            py-3
+            px-4
+            leading-tight
+            focus:outline-none focus:bg-white focus:border-gray-500
+          "
+          id="grid-password"
           type="text"
-          class="border-2 border-indigo-600"
           x-model="inputVal"
-          @keydown.enter="todos.push({name:inputVal,completed:false}); inputVal='';"
+          @keydown.enter="if(inputVal.trim().length) todos.push({name:inputVal,completed:false}); inputVal='';"
           placeholder="Enter a todo"
         />
-        <template x-for="todo in todos">
-          <div class="flex py-3 items-center justify-between">
-            <span>
-              <input type="checkbox" />
-              <span x-text="todo.name"></span>
-            </span>
-            <button class="ml-3">X</button>
-          </div>
-        </template>
+        <button
+          class="
+            bg-blue-500
+            hover:bg-blue-700
+            text-white
+            font-bold
+            py-2
+            px-4
+            rounded
+            absolute
+            top-0
+            right-0
+            bottom-0
+          "
+          @click="if(inputVal.trim().length) todos.push({name:inputVal,completed:false}); inputVal='';"
+        >
+          Add Todo
+        </button>
+      </div>
+      <template x-for="todo in todos">
+        <div class="flex py-3 items-center justify-between">
+          <span>
+            <input type="checkbox" />
+            <span x-text="todo.name"></span>
+          </span>
+          <button
+            class="ml-3"
+            @click="todos = todos.filter((currentTodo)=> currentTodo !== todo)"
+          >
+            X
+          </button>
+        </div>
+      </template>
+      <div
+        class="sticky w-full bottom-0 bg-white flex item-center justify-center"
+      >
+        <button
+          class="
+            bg-transparent
+            hover:bg-blue-500
+            text-blue-700
+            font-semibold
+            hover:text-white
+            py-2
+            px-4
+            mt-5
+            border border-blue-500
+            hover:border-transparent
+            rounded
+          "
+          @click="todos=[];inputVal=''"
+        >
+          Clear All
+        </button>
       </div>
     </div>
   </body>
