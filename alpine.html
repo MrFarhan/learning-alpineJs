@@ -10,13 +10,12 @@
       src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
     ></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="todo.js"></script>
   </head>
   <body class="flex items-center justify-between pt-5 flex-col">
     <h1 x-data="{ message: 'TODO APPLICATION' }" x-text="message"></h1>
 
-    <div x-data="todoApp()">
-      <form
+    <div x-data="{ inputVal: '',todos:[] }">
+      <div
         class="
           bg-white
           shadow-md
@@ -25,56 +24,26 @@
           pt-6
           pb-8
           mb-4
-          flex
-          items-center
-          justify-between
+          flex flex-col
+          items-right
         "
       >
         <input
           type="text"
-          class="
-            user_input_task
-            shadow
-            appearance-none
-            border
-            rounded
-            w-full
-            py-2
-            px-3
-            text-gray-700
-            leading-tight
-            focus:outline-none focus:shadow-outline
-          "
-          x-model="task"
-          placeholder="Input here..."
+          class="border-2 border-indigo-600"
+          x-model="inputVal"
+          @keydown.enter="todos.push({name:inputVal,completed:false}); inputVal='';"
+          placeholder="Enter a todo"
         />
-        <button
-          class="
-            bg-blue-500
-            hover:bg-blue-700
-            text-white
-            font-bold
-            py-2
-            px-4
-            rounded
-            focus:outline-none focus:shadow-outline
-          "
-          type="button"
-          @click="addTodo"
-        >
-          Add Todo
-        </button>
-      </form>
-      <div class="task_list">
-        <template x-show="todos.length" x-for="task in todos" :key="task.id">
-          <div>
-            <div x-text="task.item" class="task-item"></div>
-            <span class="task-remove" @click="remove(event, task.id)"
-              >&times;</span
-            >
+        <template x-for="todo in todos">
+          <div class="flex py-3 items-center justify-between">
+            <span>
+              <input type="checkbox" />
+              <span x-text="todo.name"></span>
+            </span>
+            <button class="ml-3">X</button>
           </div>
         </template>
-        <div x-show="!todos.length">No plans for today!</div>
       </div>
     </div>
   </body>
