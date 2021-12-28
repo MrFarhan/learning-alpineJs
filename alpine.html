@@ -46,8 +46,14 @@
           "
           id="grid-password"
           type="text"
-          x-model="updateTodoVal ? updateTodoVal.name : inputVal"
-          @keydown.enter="if(inputVal.trim().length) todos.push({name:inputVal,completed:false, id:Math.random()}); inputVal='';"
+          x-model="inputVal"
+          @keydown.enter="
+          if(inputVal.trim().length && !updateTodoVal) 
+            todos.push({name:inputVal,completed:false, id:Math.random()}); 
+          if(updateTodoVal) 
+            todos[todos.findIndex((todo)=>todo.id === updateTodoVal.id)].name = inputVal; 
+            inputVal = '';
+            "
           placeholder="Enter a todo"
         />
         <button
@@ -64,10 +70,16 @@
             right-0
             bottom-0
           "
-          @click="if(inputVal.trim().length) todos.push({name:inputVal,completed:false}); inputVal='';"
+          @click="
+          if(inputVal.trim().length && !updateTodoVal) 
+            todos.push({name:inputVal,completed:false, id:Math.random()}); 
+            console.log('input vali s',inputVal)
+          if(updateTodoVal) 
+            todos[todos.findIndex((todo)=>todo.id === updateTodoVal.id)].name = inputVal; 
+            inputVal = '';
+            "
           x-text="updateTodoVal ? 'Update Todo' : 'Add Todo'"
-          >
-        </button>
+        ></button>
       </div>
       <template x-for="todo in todos" :key="todo.id">
         <div class="flex py-3 items-center justify-between">
@@ -84,7 +96,7 @@
           </span>
           <span>
             <button
-              @click="updateTodoVal=todo, console.log(updateTodoVal)"
+              @click="updateTodoVal=todo, inputVal=updateTodoVal.name, console.log(updateTodoVal)"
               type="button"
               class="
                 ml-3
@@ -164,8 +176,8 @@
         >
           Clear All
         </button>
-        <span x-text="todos.length"></span>/
-        <span x-text="todos.filter((todo)=>todo.completed).length"></span>
+        <span x-text="todos.filter((todo)=>todo.completed).length"></span>/
+        <span x-text="todos.length"></span>
         Todos Completed
       </div>
     </div>
