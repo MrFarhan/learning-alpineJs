@@ -29,7 +29,7 @@
       "
       x-data="{ inputVal: '',todos:[] }"
     >
-      <h1 >TODO APPLICATION</h1>
+      <h1>TODO APPLICATION</h1>
       <div class="w-full flex item-center justify-center relative">
         <input
           class="
@@ -47,7 +47,7 @@
           id="grid-password"
           type="text"
           x-model="inputVal"
-          @keydown.enter="if(inputVal.trim().length) todos.push({name:inputVal,completed:false}); inputVal='';"
+          @keydown.enter="if(inputVal.trim().length) todos.push({name:inputVal,completed:false, id:Math.random()}); inputVal='';"
           placeholder="Enter a todo"
         />
         <button
@@ -69,11 +69,14 @@
           Add Todo
         </button>
       </div>
-      <template x-for="todo in todos">
+      <template x-for="todo in todos" :key="todo.id">
         <div class="flex py-3 items-center justify-between">
           <span>
-            <input type="checkbox" />
-            <span x-text="todo.name"></span>
+            <input type="checkbox" x-modal="todo.completed" @click="todo.completed=!todo.completed"/>
+            <span
+              x-text="todo.name"
+              x-bind:class="{ 'line-through' :todo.completed }"
+            ></span>
           </span>
           <button
             class="ml-3"
@@ -101,9 +104,13 @@
             rounded
           "
           @click="todos=[];inputVal=''"
+          x-show="todos.length >1"
         >
           Clear All
         </button>
+        <span x-text="todos.length"></span>/
+        <span x-text="todos.filter((todo)=>todo.completed).length"></span>
+        Todos Completed
       </div>
     </div>
   </body>
