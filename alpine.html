@@ -27,7 +27,7 @@
         max-h-customMaxHeight
         overflow-auto
       "
-      x-data="{ inputVal: '',todos:[] }"
+      x-data="{ inputVal: '', todos:[], updateTodoVal:'' }"
     >
       <h1>TODO APPLICATION</h1>
       <div class="w-full flex item-center justify-center relative">
@@ -46,7 +46,7 @@
           "
           id="grid-password"
           type="text"
-          x-model="inputVal"
+          x-model="updateTodoVal ? updateTodoVal.name : inputVal"
           @keydown.enter="if(inputVal.trim().length) todos.push({name:inputVal,completed:false, id:Math.random()}); inputVal='';"
           placeholder="Enter a todo"
         />
@@ -65,25 +65,81 @@
             bottom-0
           "
           @click="if(inputVal.trim().length) todos.push({name:inputVal,completed:false}); inputVal='';"
-        >
-          Add Todo
+          x-text="updateTodoVal ? 'Update Todo' : 'Add Todo'"
+          >
         </button>
       </div>
       <template x-for="todo in todos" :key="todo.id">
         <div class="flex py-3 items-center justify-between">
           <span>
-            <input type="checkbox" x-modal="todo.completed" @click="todo.completed=!todo.completed"/>
+            <input
+              type="checkbox"
+              x-modal="todo.completed"
+              @click="todo.completed=!todo.completed"
+            />
             <span
               x-text="todo.name"
               x-bind:class="{ 'line-through' :todo.completed }"
             ></span>
           </span>
-          <button
-            class="ml-3"
-            @click="todos = todos.filter((currentTodo)=> currentTodo !== todo)"
-          >
-            X
-          </button>
+          <span>
+            <button
+              @click="updateTodoVal=todo, console.log(updateTodoVal)"
+              type="button"
+              class="
+                ml-3
+                bg-white
+                rounded-md
+                p-2
+                inline-flex
+                items-center
+                justify-center
+                text-gray-400
+                hover:text-gray-500 hover:bg-gray-100
+                focus:outline-none
+                focus:ring-2
+                focus:ring-inset
+                focus:ring-indigo-500
+              "
+            >
+              Edit
+            </button>
+            <button
+              @click="todos = todos.filter((currentTodo)=> currentTodo !== todo)"
+              type="button"
+              class="
+                ml-3
+                bg-white
+                rounded-md
+                p-2
+                inline-flex
+                items-center
+                justify-center
+                text-gray-400
+                hover:text-gray-500 hover:bg-gray-100
+                focus:outline-none
+                focus:ring-2
+                focus:ring-inset
+                focus:ring-indigo-500
+              "
+            >
+              <svg
+                class="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </span>
         </div>
       </template>
       <div
